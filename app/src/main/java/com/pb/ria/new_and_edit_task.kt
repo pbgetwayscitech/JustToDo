@@ -5,11 +5,11 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import android.window.OnBackInvokedDispatcher
-import androidx.room.Database
 import androidx.room.Room
 import com.google.android.material.textfield.TextInputEditText
 import com.pb.ria.db.note_database
+import com.pb.ria.db.single_note_entity
+import java.util.Date
 
 class new_and_edit_task : AppCompatActivity() {
 
@@ -18,6 +18,7 @@ class new_and_edit_task : AppCompatActivity() {
     lateinit var save : Button
     lateinit var done : Button
     lateinit var delete : Button
+    var key : String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,9 +35,10 @@ class new_and_edit_task : AppCompatActivity() {
     }
 
     fun load_if_saved(){
-        val input_title = intent.getStringExtra("title_key")+""
-        if(!input_title.toString().equals("")){
-            check_in_sql_database(input_title!!)
+        val input_title_key = intent.getStringExtra("title_key")+""
+        if(!input_title_key.trim().toString().equals("")){
+            check_in_sql_database(input_title_key!!)
+            key = input_title_key
         }else{
             setonclicklistner()
         }
@@ -44,11 +46,25 @@ class new_and_edit_task : AppCompatActivity() {
 
     fun check_in_sql_database( title_key : String){
         print("justtodo _checking in sql database")
-
+        check_sql_database(this, this,title_key).start()
     }
 
     fun setonclicklistner(){
         print("justtodo _setting up onclick listeners")
+
+        save.setOnClickListener {
+            inset_into_sql_database(this,this,title_text.text.toString(),
+                desccription_text.text.toString(),"",const.note_state.save).start()
+        }
+
+        done.setOnClickListener {
+
+        }
+
+        delete.setOnClickListener {
+
+        }
+
     }
 
 }
@@ -59,15 +75,59 @@ class check_sql_database( mcontext : Context , mactivity : Activity , mkey : Str
     val context  =  mcontext
     val key  = mkey
 
+    override fun run() {
+        super.run()
+
+        val note_db  =  Room.databaseBuilder(context, note_database::class.java,const.db_name).build()
+
+        val mlist = note_db.notedao().search_in_notest(key)
+        if(mlist.isNotEmpty()){
+            print("justodo _one note found")
+
+            val index_zero = mlist.get(0)
+            activity.runOnUiThread {
+                val title_text  : TextInputEditText = activity.findViewById(R.id.task_edittext_title)
+                val desccription_text  : TextInputEditText = activity.findViewById(R.id.task_edittext_description)
+
+                title_text.setText(index_zero.Title)
+                desccription_text.setText(index_zero.Description)
+            }
+        }else{
+            activity.finish()
+        }
+    }
+}
+
+class inset_into_sql_database ( mcontext: Context,
+                                mactivity: Activity,mtitle : String ,
+                                mdesc : String,
+                                mkey :String,
+                                maction: const.note_state,) : Thread(){
+
+    val activity = mactivity
+    val title  = mtitle
+    val context = mcontext
+    val desc = mdesc
+    val key =  mkey
+    val action  = maction
+
     val note_db  =  Room.databaseBuilder(context,note_database::class.java,const.db_name).build()
 
     override fun run() {
         super.run()
 
-        val mlist = note_db.notedao().search_in_notest(key)
-        if(mlist.isNotEmpty()){
-            print("justodo _one note found")
+        if (action == const.note_state.save){
+
+            val single_note = single_note_entity("",title,desc,Date().toString(),const.note_state.save.toString())
+            note_db.notedao().insert_into_note(single_note);
+
         }
 
+        if (action == const.note_state.update){
+
+            val single_note = single_note_entity("",title,desc,Date().toString(),const.note_state.save.toString())
+            note_db.notedao().update_into_database(single_note)
+
+        }
     }
 }

@@ -1,21 +1,28 @@
 package com.pb.ria.db
 
+import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import org.jetbrains.annotations.NotNull
 
 @Entity
 data class single_note_entity (
 
-    @PrimaryKey(true)
-    val key : String  = "",
+    @NonNull
+    @PrimaryKey(autoGenerate = true)
+    val mkey : String ,
+
     @ColumnInfo
-    val  Title  : String = "",
+    var Title  : String,
+
     @ColumnInfo
-    val Description : String  = "",
+    var Description : String,
+
     @ColumnInfo
-    val Timestamp : String = "",
+    var Timestamp : String,
+
     @ColumnInfo
-    val state :String = ""
+    var state :String
 
 )
