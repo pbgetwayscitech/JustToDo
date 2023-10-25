@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="TASKS" android:icon="@drawable/list_alt_add"/>
+    <item android:title="COMPLETED" android:icon="@drawable/done_all_light"/>
+    <item android:title="SCHEDULED" android:icon="@drawable/more_time"/>
+</menu>
