@@ -2,13 +2,14 @@ package com.pb.ria
 
 import android.app.Activity
 import android.content.Context
+import android.database.sqlite.SQLiteDatabase
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import androidx.room.Room
 import com.google.android.material.textfield.TextInputEditText
-import com.pb.ria.db.note_database
-import com.pb.ria.db.single_note_entity
+import com.pb.ria.db.ndb
+import com.pb.ria.db.nen
 import java.util.Date
 
 class new_and_edit_task : AppCompatActivity() {
@@ -37,7 +38,13 @@ class new_and_edit_task : AppCompatActivity() {
     fun load_if_saved(){
         val input_title_key = intent.getStringExtra("title_key")+""
         if(!input_title_key.trim().toString().equals("")){
-            check_in_sql_database(input_title_key!!)
+            // check_in_sql_database(input_title_key!!)
+
+            val note_db  =  Room.databaseBuilder(this,
+                ndb::class.java,
+                "notedb").build()
+            //val all = note_db.notedao().get_all_notes()
+
             key = input_title_key
         }else{
             setonclicklistner()
@@ -54,7 +61,7 @@ class new_and_edit_task : AppCompatActivity() {
 
         save.setOnClickListener {
             inset_into_sql_database(this,this,title_text.text.toString(),
-                desccription_text.text.toString(),"",const.note_state.save).start()
+                desccription_text.text.toString(),"","").start()
         }
 
         done.setOnClickListener {
@@ -78,9 +85,9 @@ class check_sql_database( mcontext : Context , mactivity : Activity , mkey : Str
     override fun run() {
         super.run()
 
-        val note_db  =  Room.databaseBuilder(context, note_database::class.java,const.db_name).build()
+//        val note_db  =  Room.databaseBuilder(context, Note_database::class.java,const.db_name).build()
 
-        val mlist = note_db.notedao().search_in_notest(key)
+        val mlist = emptyList<nen>() // note_db.notedao().search_in_notest(key)
         if(mlist.isNotEmpty()){
             print("justodo _one note found")
 
@@ -102,7 +109,7 @@ class inset_into_sql_database ( mcontext: Context,
                                 mactivity: Activity,mtitle : String ,
                                 mdesc : String,
                                 mkey :String,
-                                maction: const.note_state,) : Thread(){
+                                maction: String,) : Thread(){
 
     val activity = mactivity
     val title  = mtitle
@@ -111,23 +118,27 @@ class inset_into_sql_database ( mcontext: Context,
     val key =  mkey
     val action  = maction
 
-    val note_db  =  Room.databaseBuilder(context,note_database::class.java,const.db_name).build()
+   // val note_db  =  Room.databaseBuilder(context, Note_database::class.java,const.db_name).build()
 
     override fun run() {
         super.run()
 
+        /*
+
         if (action == const.note_state.save){
 
-            val single_note = single_note_entity("",title,desc,Date().toString(),const.note_state.save.toString())
-            note_db.notedao().insert_into_note(single_note);
+           // val single_note = single_note_entity("",title,desc,Date().toString(),const.note_state.save.toString())
+           // note_db.notedao().insert_into_note(single_note);
 
         }
 
         if (action == const.note_state.update){
 
-            val single_note = single_note_entity("",title,desc,Date().toString(),const.note_state.save.toString())
-            note_db.notedao().update_into_database(single_note)
+           // val single_note = single_note_entity("",title,desc,Date().toString(),const.note_state.save.toString())
+           // note_db.notedao().update_into_database(single_note)
 
         }
+
+         */
     }
 }

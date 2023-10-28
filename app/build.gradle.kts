@@ -1,9 +1,6 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("com.google.devtools.ksp")
-    // id("kotlin-android")
-    // id("kotlin-kapt")
 }
 
 android {
@@ -51,6 +48,4 @@ dependencies {
     //Room Database
     implementation("androidx.room:room-runtime:2.6.0")
     annotationProcessor("androidx.room:room-compiler:2.6.0")
-    ksp("androidx.room:room-compiler:2.6.0")
-
 }

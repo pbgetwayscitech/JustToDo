@@ -2,7 +2,13 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="TASKS" android:icon="@drawable/list_alt_add"/>
-    <item android:title="COMPLETED" android:icon="@drawable/done_all_light"/>
-    <item android:title="SCHEDULED" android:icon="@drawable/more_time"/>
+    <item android:title="TASKS"
+        android:id="@+id/menu_id_tasks"
+        android:icon="@drawable/list_alt_add"/>
+    <item android:title="COMPLETED"
+        android:id="@+id/menu_id_compleated"
+        android:icon="@drawable/done_all_light"/>
+    <item android:title="SCHEDULED"
+        android:id="@+id/menu_id_scheduled"
+        android:icon="@drawable/more_time"/>
 </menu>

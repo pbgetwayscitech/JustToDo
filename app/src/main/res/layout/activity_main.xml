@@ -7,6 +7,29 @@
     tools:context=".MainActivity">
 
     <LinearLayout
+        android:id="@+id/banner_no_notes_found"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="250dp"
+            android:src="@drawable/empty_note"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No notes found !"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -14,37 +37,34 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:padding="10dp"
+            android:background="@drawable/border"
+            android:layout_margin="5dp"
             android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/task"
+                android:layout_height="match_parent"
+                android:src="@drawable/assignment_turned_in"
                 app:tint="@color/black"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tasks"
+                android:text="TASKS"
                 android:textStyle="normal"
-                android:textSize="20dp"
+                android:textSize="18dp"
                 android:paddingStart="10dp"
                 android:layout_gravity="center_vertical"/>
 
         </LinearLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:background="@color/black"/>
-
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/main_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
 
     </LinearLayout>
 
@@ -68,6 +88,7 @@
         android:layout_marginBottom="10dp">
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/main_bottom_navigation_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:menu="@menu/main_manu"/>
