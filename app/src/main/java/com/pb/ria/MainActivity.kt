@@ -39,13 +39,24 @@ class MainActivity : AppCompatActivity() {
             overridePendingTransition(com.google.android.material.R.anim.abc_slide_in_bottom, com.google.android.material.R.anim.abc_slide_out_top)
         }
 
+        load_tasks_databse()
+    }
+    fun load_tasks_databse(){
+
         if (!bottom_navigation_view.isSelected){
             bottom_navigation_view.selectedItemId = R.id.menu_id_tasks
         }
 
-        load_tasks_databse()
-    }
-    fun load_tasks_databse(){
+        when(bottom_navigation_view.selectedItemId){
+            R.id.menu_id_tasks ->
+                loadlists(this, this,"saved").start()
+            R.id.menu_id_compleated ->
+                loadlists(this,this,"compleated").start()
+            R.id.menu_id_scheduled ->
+                loadlists(this,this,"saved").start()
+            else ->
+                false
+        }
 
         bottom_navigation_view.setOnItemSelectedListener { item ->
 
@@ -79,7 +90,10 @@ class loadlists(mcontext : Context,mactivity : Activity,mstate : String) : Threa
         val banner_no_notes = activity.findViewById<LinearLayout>(R.id.banner_no_notes_found)
         val main_recycler_View = activity.findViewById<RecyclerView>(R.id.main_recycler_view)
         Log.d("m_ria","currly loading list of $mstate")
-        banner_no_notes.visibility = View.VISIBLE
+        activity.runOnUiThread {
+            banner_no_notes.visibility = View.VISIBLE
+            main_recycler_View.visibility = View.INVISIBLE
+        }
 
         val note_db  =  Room.databaseBuilder(context, ndb::class.java,
             "notedb").build()
@@ -87,14 +101,20 @@ class loadlists(mcontext : Context,mactivity : Activity,mstate : String) : Threa
 
         if (all_notest.size > 0){
             Log.d("m_ria","found total of ${all_notest.size} records")
-            banner_no_notes.visibility = View.INVISIBLE
 
-            main_recycler_View.layoutManager = LinearLayoutManager(context)
-            main_recycler_View.adapter = recycler_View_adapter(context,activity,all_notest)
+            activity.runOnUiThread {
+                banner_no_notes.visibility = View.INVISIBLE
+                main_recycler_View.visibility = View.VISIBLE
+                main_recycler_View.layoutManager = LinearLayoutManager(context)
+                main_recycler_View.adapter = recycler_View_adapter(context,activity,all_notest)
+            }
 
         }else{
             Log.d("m_","the sixe of the list is zero ${all_notest.size}")
-            banner_no_notes.visibility = View.VISIBLE
+            activity.runOnUiThread {
+                banner_no_notes.visibility = View.VISIBLE
+                main_recycler_View.visibility = View.INVISIBLE
+            }
         }
 
 

@@ -68,14 +68,18 @@ class backthread(mcontext : Context, mactivity : Activity , mkey : String) : Thr
         if (key.trim() != "" && key != "null") {
             // key is not ""
             Log.d("m_", "key after null check is $key")
+            val title_ex = note_db.ndao().search_in_noteid(key).get(0).title
+            val desc_ex = note_db.ndao().search_in_noteid(key).get(0).description
 
-            title_text.setText(note_db.ndao().search_in_noteid(key).get(0).Title)
-            desccription_text.setText(note_db.ndao().search_in_noteid(key).get(0).Description)
+            activity.runOnUiThread {
+                title_text.setText(title_ex)
+                desccription_text.setText(desc_ex)
+            }
 
             save.setOnClickListener {
 
                 val mnen = nen()
-                mnen.setId(note_db.ndao().search_in_noteid(key).get(0).id)
+                mnen.setId(Integer.parseInt(key))
                 mnen.title = title_text.text.toString()
                 mnen.description = desccription_text.text.toString()
                 mnen.timestamp = currentDateAndTime.toString()
@@ -94,7 +98,7 @@ class backthread(mcontext : Context, mactivity : Activity , mkey : String) : Thr
             done.setOnClickListener {
 
                 val mnen = nen()
-                mnen.setId(note_db.ndao().search_in_noteid(key).get(0).id)
+                mnen.setId(Integer.parseInt(key))
                 mnen.title = title_text.text.toString()
                 mnen.description = desccription_text.text.toString()
                 mnen.timestamp = currentDateAndTime.toString()
@@ -128,7 +132,7 @@ class backthread(mcontext : Context, mactivity : Activity , mkey : String) : Thr
             save.setOnClickListener {
                 val mnen = nen()
                 mnen.title = title_text.text.toString()
-                mnen.description = desccription_text.toString()
+                mnen.description = desccription_text.text.toString()
                 mnen.timestamp = currentDateAndTime
                 mnen.setState("saved")
                 couritinescopee.launch {
@@ -146,7 +150,7 @@ class backthread(mcontext : Context, mactivity : Activity , mkey : String) : Thr
 
                 val mnen = nen()
                 mnen.title = title_text.text.toString()
-                mnen.description = desccription_text.toString()
+                mnen.description = desccription_text.text.toString()
                 mnen.timestamp = currentDateAndTime
                 mnen.setState("compleated")
                 couritinescopee.launch {
