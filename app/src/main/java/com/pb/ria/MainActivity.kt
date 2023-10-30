@@ -93,6 +93,7 @@ class loadlists(mcontext : Context,mactivity : Activity,mstate : String) : Threa
             main_recycler_View.adapter = recycler_View_adapter(context,activity,all_notest)
 
         }else{
+            Log.d("m_","the sixe of the list is zero ${all_notest.size}")
             banner_no_notes.visibility = View.VISIBLE
         }
 
