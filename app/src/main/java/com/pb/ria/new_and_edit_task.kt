@@ -54,15 +54,126 @@ class backthread(mcontext : Context, mactivity : Activity , mkey : String) : Thr
     override fun run() {
         super.run()
 
-        val mnen = nen()
-        mnen.timestamp = Date().toString()
-        note_db.ndao().insert_note(mnen)
+        title_text = activity.findViewById(R.id.task_edittext_title)
+        desccription_text = activity.findViewById(R.id.task_edittext_description)
+        save = activity.findViewById(R.id.task_btton_save)
+        done = activity.findViewById(R.id.task_button_done)
+        delete = activity.findViewById(R.id.task_button_delete)
 
-        Log.d("m_","db inserted")
+        val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy/HH:mm:ss", Locale.getDefault())
+        val currentDateAndTime = simpleDateFormat.format(Date())
 
-        Log.d("m_","db inserte ${note_db.ndao()._all}")
+        val couritinescopee  = CoroutineScope(Dispatchers.IO)
 
+        if (key.trim() != "" && key != "null") {
+            // key is not ""
+            Log.d("m_", "key after null check is $key")
 
+            title_text.setText(note_db.ndao().search_in_noteid(key).get(0).Title)
+            desccription_text.setText(note_db.ndao().search_in_noteid(key).get(0).Description)
+
+            save.setOnClickListener {
+
+                val mnen = nen()
+                mnen.setId(note_db.ndao().search_in_noteid(key).get(0).id)
+                mnen.title = title_text.text.toString()
+                mnen.description = desccription_text.text.toString()
+                mnen.timestamp = currentDateAndTime.toString()
+                mnen.setState("saved")
+                couritinescopee.launch {
+                    note_db.ndao().update_into_database(mnen)
+                    Log.d("m_","databse updated")
+                    activity.runOnUiThread {
+                        Snackbar.make(context, save, "Note Updated !", Snackbar.LENGTH_LONG).show()
+                        activity.finish()
+                    }
+                }
+
+            }
+
+            done.setOnClickListener {
+
+                val mnen = nen()
+                mnen.setId(note_db.ndao().search_in_noteid(key).get(0).id)
+                mnen.title = title_text.text.toString()
+                mnen.description = desccription_text.text.toString()
+                mnen.timestamp = currentDateAndTime.toString()
+                mnen.setState("compleated")
+                couritinescopee.launch {
+                    note_db.ndao().update_into_database(mnen)
+                    Log.d("m_","databse updated")
+                    activity.runOnUiThread {
+                        Snackbar.make(context, save, "Note marked as Completed !", Snackbar.LENGTH_LONG).show()
+                        activity.finish()
+                    }
+                }
+
+            }
+
+            delete.setOnClickListener {
+
+                couritinescopee.launch {
+                    note_db.ndao().deletenote(key)
+                    activity.runOnUiThread {
+                        Snackbar.make(context, save, "Note Deleted !", Snackbar.LENGTH_LONG).show()
+                        activity.finish()
+                    }
+                }
+            }
+
+        }
+        else {
+            // key is ""
+
+            save.setOnClickListener {
+                val mnen = nen()
+                mnen.title = title_text.text.toString()
+                mnen.description = desccription_text.toString()
+                mnen.timestamp = currentDateAndTime
+                mnen.setState("saved")
+                couritinescopee.launch {
+                    note_db.ndao().insert_note(mnen)
+                    Log.d("m_","Database Inserted")
+                    activity.runOnUiThread {
+                        Snackbar.make(context, save, "Note Added ! ", Snackbar.LENGTH_LONG).show()
+                        activity.finish()
+                    }
+                }
+
+            }
+
+            done.setOnClickListener {
+
+                val mnen = nen()
+                mnen.title = title_text.text.toString()
+                mnen.description = desccription_text.toString()
+                mnen.timestamp = currentDateAndTime
+                mnen.setState("compleated")
+                couritinescopee.launch {
+                    note_db.ndao().insert_note(mnen)
+                    activity.runOnUiThread {
+                        Snackbar.make(context, save, "Note marked Completed ! ", Snackbar.LENGTH_LONG).show()
+                        activity.finish()
+                    }
+                }
+            }
+
+            delete.setOnClickListener {
+                activity.runOnUiThread {
+                    Snackbar.make(
+                        context,
+                        save,
+                        "This note has not been created yet",
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                    activity.finish()
+                }
+            }
+        }
+
+        for(item in note_db.ndao()._all){
+            Log.d("m_","db list ids ${item.id}")
+        }
     }
 }
 
