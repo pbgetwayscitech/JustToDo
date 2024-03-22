@@ -3,6 +3,11 @@
     <style name="Base.Theme.JustToDo" parent="Theme.Material3.DayNight.NoActionBar">
        <item name="colorPrimary">@color/black</item>
     </style>
-
     <style name="Theme.JustToDo" parent="Base.Theme.JustToDo" />
+
+    <style name="Base.Theme.JustToDo.MainPage" parent="Base.Theme.JustToDo">
+
+        <item name="colorPrimary">#2196F3</item>
+
+    </style>
 </resources>

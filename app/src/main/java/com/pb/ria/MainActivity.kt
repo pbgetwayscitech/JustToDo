@@ -24,14 +24,12 @@ import kotlin.concurrent.timerTask
 class MainActivity : AppCompatActivity() {
 
     lateinit var new_task_button : FloatingActionButton
-    lateinit var bottom_navigation_view : BottomNavigationView
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
          new_task_button = findViewById(R.id.new_task_floating_aciton_button)
-         bottom_navigation_view = findViewById(R.id.main_bottom_navigation_view)
 
         new_task_button.setOnClickListener {
             val i  = Intent(this@MainActivity, new_and_edit_task::class.java)
@@ -39,43 +37,9 @@ class MainActivity : AppCompatActivity() {
             overridePendingTransition(com.google.android.material.R.anim.abc_slide_in_bottom, com.google.android.material.R.anim.abc_slide_out_top)
         }
 
-        load_tasks_databse()
+        //  load_tasks_databse()
     }
-    fun load_tasks_databse(){
 
-        if (!bottom_navigation_view.isSelected){
-            bottom_navigation_view.selectedItemId = R.id.menu_id_tasks
-        }
-
-        when(bottom_navigation_view.selectedItemId){
-            R.id.menu_id_tasks ->
-                loadlists(this, this,"saved").start()
-            R.id.menu_id_compleated ->
-                loadlists(this,this,"compleated").start()
-            R.id.menu_id_scheduled ->
-                loadlists(this,this,"saved").start()
-            else ->
-                false
-        }
-
-        bottom_navigation_view.setOnItemSelectedListener { item ->
-
-            when(item.itemId){
-                R.id.menu_id_tasks ->
-                    loadlists(this, this,"saved").start()
-                R.id.menu_id_compleated ->
-                    loadlists(this,this,"compleated").start()
-                R.id.menu_id_scheduled ->
-                    loadlists(this,this,"saved").start()
-                else ->
-                    false
-                //do nothing
-            }
-
-             true
-        }
-
-    }
 
 }
 
